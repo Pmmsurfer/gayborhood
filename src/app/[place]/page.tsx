@@ -48,7 +48,9 @@ export default async function PlacePage({ params }: Props) {
     communities && communities.length > 0
       ? await Promise.all(
           communities.map(async (c: any) => {
-            const { count } = await admin
+            if (!supabaseAdmin) throw new Error("supabaseAdmin is not initialized");
+            const db = supabaseAdmin;
+            const { count } = await db
               .from("posts")
               .select("id", { count: "exact", head: true })
               .eq("place_slug", place)
