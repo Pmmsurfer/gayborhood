@@ -12,7 +12,8 @@ export default async function PlacePage({ params }: Props) {
   if (!supabaseAdmin) {
     throw new Error("Supabase admin client is not configured");
   }
-  const admin = supabaseAdmin as NonNullable<typeof supabaseAdmin>;
+  // Assert non-null so type is narrow in closures (e.g. map callback)
+  const admin = supabaseAdmin!;
 
   const supabase = await createClient();
   const {
