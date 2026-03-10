@@ -1,5 +1,8 @@
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import { isPowerUser } from "@/lib/powerUser";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import CommunityList from "./CommunityList";
 
 type Props = { params: { place: string } };
 
@@ -9,21 +12,22 @@ export default async function PlacePage({ params }: Props) {
   if (!supabaseAdmin) {
     throw new Error("Supabase admin client is not configured");
   }
+  const admin = supabaseAdmin as NonNullable<typeof supabaseAdmin>;
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const powerUser = isPowerUser(user?.email ?? undefined);
 
   const [{ data: placeRow }, { data: communities }] = await Promise.all([
-    supabaseAdmin.from("places").select("*").eq("slug", place).single(),
-    supabaseAdmin
+    admin.from("places").select("*").eq("slug", place).single(),
+    admin
       .from("communities")
       .select("*")
       .eq("place_slug", place)
       .order("name", { ascending: true }),
   ]);
-
-  console.log("PLACE_PAGE_COMMUNITIES", {
-    place,
-    count: communities?.length ?? 0,
-    slugs: (communities ?? []).map((c: any) => c.slug),
-  });
 
   if (!placeRow) {
     return (
@@ -42,7 +46,7 @@ export default async function PlacePage({ params }: Props) {
     communities && communities.length > 0
       ? await Promise.all(
           communities.map(async (c: any) => {
-            const { count } = await supabaseAdmin
+            const { count } = await admin
               .from("posts")
               .select("id", { count: "exact", head: true })
               .eq("place_slug", place)
@@ -63,32 +67,12 @@ export default async function PlacePage({ params }: Props) {
         {placeRow.slug}/
       </h1>
 
-      <div className="mt-6 space-y-2 font-courier text-sm">
-        {communitiesWithCounts.length === 0 ? (
-          <p className="text-faded">
-            No communities here yet. Start the first one.
-          </p>
-        ) : (
-          communitiesWithCounts.map((c: any) => (
-            <div key={c.id} className="flex flex-wrap gap-x-2">
-              <Link
-                href={`/${place}/${c.slug}`}
-                className="min-w-[140px] text-link hover:underline"
-              >
-                {c.slug}
-              </Link>
-              <span className="flex-1 text-faded">
-                {c.description ?? ""}
-                {"  "}
-                {c.is_active
-                  ? `${c.member_count ?? 0} members · ${
-                      c.eventsThisWeek ?? 0
-                    } events this week`
-                  : "starting out"}
-              </span>
-            </div>
-          ))
-        )}
+      <div className="mt-6">
+        <CommunityList
+          place={place}
+          communities={communitiesWithCounts}
+          isPowerUser={powerUser}
+        />
       </div>
 
       <p className="mt-6 font-courier text-sm">

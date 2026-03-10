@@ -23,7 +23,8 @@ export type Gayborhood = {
 
 export type Post = {
   id: string;
-  gayborhood_slug: string;
+  place_slug: string;
+  community_slug: string;
   category: string;
   title: string;
   body: string;
@@ -47,7 +48,8 @@ export type Post = {
 export type Reply = {
   id: string;
   post_id: string;
-  gayborhood_slug: string | null;
+  place_slug: string | null;
+  community_slug: string | null;
   body: string;
   author_name: string;
   neighborhood: string | null;

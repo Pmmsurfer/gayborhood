@@ -75,8 +75,8 @@ export default function LoginForm() {
         <Link
           href={
             next !== "/"
-              ? `/signup?next=${encodeURIComponent(next)}`
-              : "/signup"
+              ? `/login/sign-up?next=${encodeURIComponent(next)}`
+              : "/login/sign-up"
           }
           className="text-link hover:underline"
         >

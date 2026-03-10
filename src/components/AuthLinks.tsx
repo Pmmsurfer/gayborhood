@@ -37,7 +37,7 @@ export default function AuthLinks({ signedIn }: Props) {
       <Link href="/login" className="text-link hover:underline">
         Sign in
       </Link>
-      <Link href="/signup" className="text-link hover:underline">
+      <Link href="/login/sign-up" className="text-link hover:underline">
         Sign up
       </Link>
     </span>
