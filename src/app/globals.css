@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #f2ebd9;
+  --ink: #111108;
+  --faded: #6b6252;
+  --rule: #c8bca8;
+  --brick: #7a2515;
+  --link: #00008b;
+  --link-visited: #551a8b;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-courier), ui-monospace, monospace;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+a:visited {
+  color: var(--link-visited);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Section heads: Bebas Neue 18px, letter-spacing 2px, 1px bottom border */
+.section-head {
+  font-family: var(--font-bebas), sans-serif;
+  font-size: 18px;
+  letter-spacing: 2px;
+  border-bottom: 1px solid var(--rule);
+  margin: 0 0 1rem;
+  padding-bottom: 0.25rem;
+}
+
+/* Inputs: no background, bottom border only, Courier Prime, no border-radius */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+textarea {
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--ink);
+  border-radius: 0;
+  font-family: var(--font-courier), ui-monospace, monospace;
+  padding: 0.25rem 0;
+}
+
+input:focus,
+textarea:focus {
+  outline: none;
+  border-bottom-color: var(--ink);
+}
+
+/* Buttons: background var(--ink), Bebas Neue, letter-spacing 3px */
+.btn {
+  background: var(--ink);
+  color: var(--paper);
+  border: none;
+  border-radius: 0;
+  font-family: var(--font-bebas), sans-serif;
+  letter-spacing: 3px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+/* Missed connections: brick left border */
+.missed-connection {
+  border-left: 2px solid var(--brick);
+  padding-left: 0.75rem;
+}
+
+/* Top reply: warm background */
+.top-reply {
+  background: rgba(122, 37, 21, 0.08);
+}
+
+/* Scroll margin so sticky nav doesn’t cover section headings */
+#this-week,
+#board,
+#missed,
+#anonymous,
+#classifieds,
+#hosted,
+#recs,
+#join {
+  scroll-margin-top: 4rem;
+}

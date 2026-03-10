@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gayborhood — Find your people, find your place</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="logo">Gayborhood</a>
+      <nav class="nav">
+        <a href="#about">About</a>
+        <a href="#places">Places</a>
+        <a href="#events">Events</a>
+        <a href="#join" class="btn btn-cta">Join the map</a>
+      </nav>
+      <button type="button" class="menu-toggle" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-content">
+        <h1>Find your people.<br />Find your place.</h1>
+        <p class="hero-tagline">A friendly map of LGBTQ+ welcoming spots — bars, cafés, bookshops, and the neighborhoods that feel like home.</p>
+        <div class="hero-actions">
+          <a href="#explore" class="btn btn-primary">Explore the map</a>
+          <a href="#add" class="btn btn-secondary">Add a place</a>
+        </div>
+      </div>
+      <div class="hero-scroll" aria-hidden="true">
+        <span>Scroll</span>
+        <span class="scroll-line"></span>
+      </div>
+    </section>
+
+    <section id="about" class="section section-about">
+      <div class="container">
+        <h2 class="section-title">What is Gayborhood?</h2>
+        <p class="section-lead">We’re a community-built map of LGBTQ+ friendly spaces. No algorithm, no ads — just real recommendations from people who’ve been there.</p>
+        <div class="features">
+          <article class="feature">
+            <span class="feature-icon" aria-hidden="true">📍</span>
+            <h3>Places that welcome you</h3>
+            <p>Bars, cafés, gyms, bookshops, and more — vetted and tagged by the community.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-icon" aria-hidden="true">🌈</span>
+            <h3>Neighborhoods, not just pins</h3>
+            <p>Discover whole areas known for being safe, vibrant, and inclusive.</p>
+          </article>
+          <article class="feature">
+            <span class="feature-icon" aria-hidden="true">✌️</span>
+            <h3>By us, for us</h3>
+            <p>Anyone can add or suggest a place. The map grows with the community.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="places" class="section section-places">
+      <div class="container">
+        <h2 class="section-title">Popular right now</h2>
+        <div class="place-cards">
+          <article class="place-card">
+            <div class="place-card-image" style="--place-color: #e8b4bc;"></div>
+            <div class="place-card-body">
+              <span class="place-tag">Café</span>
+              <h3>The Lavender Cup</h3>
+              <p>Queer-owned coffee shop &amp; bookstore. Great for working and meeting up.</p>
+              <span class="place-location">West Village, NYC</span>
+            </div>
+          </article>
+          <article class="place-card">
+            <div class="place-card-image" style="--place-color: #b8d4e3;"></div>
+            <div class="place-card-body">
+              <span class="place-tag">Bar</span>
+              <h3>Neon Nights</h3>
+              <p>Dive bar with a patio. Karaoke Thursdays, drag on weekends.</p>
+              <span class="place-location">Capitol Hill, Seattle</span>
+            </div>
+          </article>
+          <article class="place-card">
+            <div class="place-card-image" style="--place-color: #d4c4e8;"></div>
+            <div class="place-card-body">
+              <span class="place-tag">Gym</span>
+              <h3>Pride Fitness</h3>
+              <p>Inclusive gym with gender-neutral changing rooms and a strong community.</p>
+              <span class="place-location">Andersonville, Chicago</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="join" class="section section-join">
+      <div class="container">
+        <h2 class="section-title">Join the map</h2>
+        <p class="section-lead">Have a spot that deserves to be on the map? Add it — or suggest one we’re missing.</p>
+        <form class="join-form" action="#" method="post">
+          <div class="form-row">
+            <label for="name">Your name</label>
+            <input type="text" id="name" name="name" placeholder="How we can call you" />
+          </div>
+          <div class="form-row">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" />
+          </div>
+          <div class="form-row">
+            <label for="place">Place or neighborhood to add</label>
+            <input type="text" id="place" name="place" placeholder="Name of the spot or area" />
+          </div>
+          <div class="form-row">
+            <label for="note">Why it matters (optional)</label>
+            <textarea id="note" name="note" rows="3" placeholder="A sentence or two about why this place is special..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p class="footer-logo">Gayborhood</p>
+      <p class="footer-tagline">Find your people. Find your place.</p>
+      <p class="footer-legal">&copy; 2026 Gayborhood. Community project.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
