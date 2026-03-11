@@ -10,16 +10,24 @@ export default async function PlacePage({ params }: Props) {
   const { place } = params;
 
   if (!supabaseAdmin) {
-    throw new Error("Supabase admin client is not configured");
+    return (
+      <main id="main-content" className="mx-auto max-w-board px-[18px] py-12 font-courier text-sm text-faded">
+        <p>Server configuration error. Set SUPABASE_SERVICE_ROLE_KEY in the deployment environment.</p>
+        <Link href="/" className="mt-4 inline-block text-link hover:underline">← Home</Link>
+      </main>
+    );
   }
 
-  // Assert non-null so TypeScript trusts it inside async callbacks
   const admin = supabaseAdmin!;
 
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user: { email?: string } | null = null;
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase.auth.getUser();
+    user = data?.user ?? null;
+  } catch {
+    // Continue without power user
+  }
   const powerUser = isPowerUser(user?.email ?? undefined);
 
   const [{ data: placeRow }, { data: communities }] = await Promise.all([
