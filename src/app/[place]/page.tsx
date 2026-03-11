@@ -30,6 +30,7 @@ export default async function PlacePage({ params }: Props) {
   }
   const powerUser = isPowerUser(user?.email ?? undefined);
 
+  try {
   const [{ data: placeRow }, { data: communities }] = await Promise.all([
     admin.from("places").select("*").eq("slug", place).single(),
     admin
@@ -97,4 +98,12 @@ export default async function PlacePage({ params }: Props) {
       </p>
     </main>
   );
+  } catch (_err) {
+    return (
+      <main id="main-content" className="mx-auto max-w-board px-[18px] py-12 font-courier text-sm text-faded">
+        <p>Something went wrong loading this page. Check that Supabase env vars (URL, anon key, service role key) are set in Vercel.</p>
+        <Link href="/" className="mt-4 inline-block text-link hover:underline">← Home</Link>
+      </main>
+    );
+  }
 }
