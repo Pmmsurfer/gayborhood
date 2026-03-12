@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { supabase } from "@/lib/supabase";
 import { CommunitySubmitForm } from "./ui/CommunitySubmitForm";
 
 type Params = { place: string; community: string };
@@ -23,21 +24,22 @@ export async function generateMetadata({
 export default async function CommunitySubmitPage({ params }: Props) {
   const { place, community } = params;
 
-  const supabase = await createClient();
-  if (!supabase) {
+  const supabaseAuth = await createClient();
+  if (!supabaseAuth) {
     redirect(
       "/login?next=" + encodeURIComponent(`/${place}/${community}/submit`)
     );
   }
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await supabaseAuth.auth.getUser();
   if (!user) {
     redirect(
       "/login?next=" + encodeURIComponent(`/${place}/${community}/submit`)
     );
   }
 
+  if (!supabase) notFound();
   const [{ data: placeRow }, { data: communityRow }] = await Promise.all([
     supabase.from("places").select("*").eq("slug", place).single(),
     supabase
