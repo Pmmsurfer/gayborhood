@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import Link from "next/link";
-import SignupForm from "./SignupForm";
+
+const SignupForm = dynamic(() => import("./SignupForm"), { ssr: false });
 
 export const metadata: Metadata = {
   title: "Sign up — Gayborhood",
