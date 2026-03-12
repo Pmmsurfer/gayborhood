@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
@@ -58,7 +57,14 @@ export default async function CommunitySubmitPage({ params }: Props) {
       .single(),
   ]);
 
-  if (!placeRow || !communityRow) notFound();
+  if (!placeRow || !communityRow) {
+    return (
+      <main id="main-content" className="mx-auto max-w-board px-[18px] py-12 font-courier text-sm text-faded">
+        <p>Place or community not found: <strong>{place}/{community}</strong>. Check that the place and community exist in the database and the URL matches their slugs.</p>
+        <Link href={`/${place}`} className="mt-4 inline-block text-link hover:underline">← Back to {place}</Link>
+      </main>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-paper">
