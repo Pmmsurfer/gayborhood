@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import { Bebas_Neue, Courier_Prime } from "next/font/google";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import AuthLinks from "@/components/AuthLinks";
 import "./globals.css";
+
+const AuthLinks = dynamic(
+  () => import("@/components/AuthLinks").then((m) => m.default),
+  { ssr: false }
+);
 
 const bebas = Bebas_Neue({
   weight: "400",
@@ -30,16 +35,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   let user: { id: string } | null = null;
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-  if (url && key) {
-    try {
-      const supabase = await createClient();
+  try {
+    const supabase = await createClient();
+    if (supabase) {
       const { data } = await supabase.auth.getUser();
       user = data?.user ?? null;
-    } catch {
-      // Supabase error; show app with signed-out state
     }
+  } catch {
+    // Supabase error; show app with signed-out state
   }
 
   return (
