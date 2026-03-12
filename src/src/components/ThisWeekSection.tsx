@@ -75,7 +75,10 @@ export default function ThisWeekSection({ events }: { events: Post[] }) {
       <h2 className="section-head font-bebas tracking-[2px] text-ink">
         THIS WEEK
       </h2>
-      <div className="mb-3 flex flex-wrap gap-2">
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <span className="font-courier text-xs uppercase tracking-[1px] text-faded">
+          filter by:
+        </span>
         {FREE_EVENT_CATEGORIES.map((cat) => (
           <button
             key={cat}

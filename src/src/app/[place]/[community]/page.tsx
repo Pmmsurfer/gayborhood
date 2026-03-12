@@ -1,7 +1,9 @@
-import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase";
+import { createClient } from "@/lib/supabase/server";
+import { isPowerUser } from "@/lib/powerUser";
 import StickyNav from "@/components/StickyNav";
 import SectionNav from "@/components/SectionNav";
 import ThisWeekSection from "@/components/ThisWeekSection";
@@ -31,6 +33,20 @@ export default async function CommunityPage({ params }: Props) {
   const { place, community } = params;
 
   if (!supabase) throw new Error("Supabase not configured");
+
+   // Lightweight auth lookup for power‑user and "member" state
+  let userEmail: string | undefined;
+  try {
+    const serverClient = await createClient();
+    if (serverClient) {
+      const { data } = await serverClient.auth.getUser();
+      userEmail = data.user?.email ?? undefined;
+    }
+  } catch {
+    // Treat as signed out
+  }
+  const powerUser = isPowerUser(userEmail);
+  const isMember = !!userEmail;
 
   // Ensure place + community exist
   const [{ data: placeRow }, { data: communityRow }] = await Promise.all([
@@ -207,6 +223,35 @@ export default async function CommunityPage({ params }: Props) {
     (p: any) => p.category === "gear"
   );
 
+  // Member count + last activity
+  const memberCount = (communityRow as any).member_count ?? 0;
+  const allPosts = [
+    ...(thisWeekRes.data ?? []),
+    ...(boardRes.data ?? []),
+    ...(missedRes.data ?? []),
+    ...(anonRes.data ?? []),
+    ...(classifiedsRes.data ?? []),
+    ...(hostedRes.data ?? []),
+    ...(recsRes.data ?? []),
+  ] as any[];
+
+  let lastPostLabel: string | null = null;
+  if (allPosts.length > 0) {
+    const latest = allPosts.reduce((latestDate, post) => {
+      const d = new Date(post.created_at);
+      return d > latestDate ? d : latestDate;
+    }, new Date(allPosts[0].created_at));
+    const days = Math.max(
+      0,
+      Math.round(
+        (Date.now() - latest.getTime()) / (1000 * 60 * 60 * 24)
+      )
+    );
+    if (days === 0) lastPostLabel = "last post today";
+    else if (days === 1) lastPostLabel = "last post 1 day ago";
+    else lastPostLabel = `last post ${days} days ago`;
+  }
+
   return (
     <div className="min-h-screen bg-paper">
       <StickyNav />
@@ -221,14 +266,44 @@ export default async function CommunityPage({ params }: Props) {
             <span className="text-faded">{place}/</span>
             <span className="text-ink">{community}</span>
           </h1>
-          <p className="mt-4 font-courier text-sm text-faded">
-            <Link
-              href={`/${place}/new`}
-              className="text-link hover:underline"
-            >
-              start a community here →
-            </Link>
+          {/* Community description */}
+          {communityRow.description && (
+            <p className="mt-2 font-courier text-sm text-faded">
+              {communityRow.description}
+            </p>
+          )}
+          {!communityRow.description && powerUser && (
+            <p className="mt-2 font-courier text-sm text-faded">
+              <span className="text-link hover:underline">
+                Add a description →
+              </span>
+            </p>
+          )}
+          {/* Member + activity signal */}
+          <p className="mt-1 font-courier text-xs text-faded">
+            {memberCount} {memberCount === 1 ? "member" : "members"}
+            {lastPostLabel ? ` · ${lastPostLabel}` : null}
           </p>
+          {/* Primary CTA */}
+          <div className="mt-4">
+            {isMember ? (
+              <Link
+                href={`/${place}/${community}/submit`}
+                className="inline-block border border-ink bg-ink px-3 py-1 font-bebas text-xs tracking-[2px] text-paper hover:bg-transparent hover:text-ink"
+              >
+                Post something →
+              </Link>
+            ) : (
+              <Link
+                href={`/login/sign-up?next=${encodeURIComponent(
+                  `/${place}/${community}`
+                )}`}
+                className="inline-block border border-ink bg-paper px-3 py-1 font-bebas text-xs tracking-[2px] text-ink hover:bg-ink hover:text-paper"
+              >
+                Join the community →
+              </Link>
+            )}
+          </div>
         </header>
 
         <SectionNav counts={sectionCounts} />
@@ -368,16 +443,23 @@ export default async function CommunityPage({ params }: Props) {
         {/* Footer */}
         <footer className="border-t border-rule pt-6 font-courier text-sm text-faded">
           {place}/{community} ·{" "}
-          <Link
-            href={`/${place}/${community}/submit`}
-            className="text-link hover:underline"
-          >
-            post something
-          </Link>{" "}
-          ·{" "}
-          <Link href={`/${place}/new`} className="text-link hover:underline">
-            start a community
-          </Link>{" "}
+          {isMember ? (
+            <Link
+              href={`/${place}/${community}/submit`}
+              className="text-link hover:underline"
+            >
+              Post something →
+            </Link>
+          ) : (
+            <Link
+              href={`/login/sign-up?next=${encodeURIComponent(
+                `/${place}/${community}/submit`
+              )}`}
+              className="text-link hover:underline"
+            >
+              Join to post →
+            </Link>
+          )}{" "}
           ·{" "}
           <a
             href="mailto:hello@gayborhood.com"

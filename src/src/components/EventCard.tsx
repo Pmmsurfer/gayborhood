@@ -98,9 +98,6 @@ export default function EventCard({ post }: { post: Post }) {
             >
               {post.title}
             </Link>
-            <span className="font-courier text-sm text-faded">
-              {categoryLabel(post.category)}
-            </span>
             {noPhones && (
               <span className="rounded-none border border-rule bg-paper px-1.5 py-0.5 font-courier text-xs text-faded">
                 no phones
@@ -133,8 +130,11 @@ export default function EventCard({ post }: { post: Post }) {
           <p className="mt-1 font-courier text-sm text-faded">
             {post.rsvp_count} going
             {post.max_attendees != null
-              ? ` · ${Math.max(0, post.max_attendees - post.rsvp_count)} spots left`
-              : " · open · just come"}
+              ? ` · ${Math.max(
+                  0,
+                  post.max_attendees - post.rsvp_count
+                )} spots left`
+              : ""}
           </p>
 
           {!submitted && !isFull && !isOpen && (
@@ -165,7 +165,7 @@ export default function EventCard({ post }: { post: Post }) {
             </form>
           )}
           {!submitted && isOpen && (
-            <p className="mt-2 font-courier text-sm text-faded">
+            <p className="mt-1 font-courier text-sm text-faded">
               open · just come
             </p>
           )}
