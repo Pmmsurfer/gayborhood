@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { CommunitySubmitForm } from "./ui/CommunitySubmitForm";
 
 type Params = { place: string; community: string };
@@ -39,10 +39,18 @@ export default async function CommunitySubmitPage({ params }: Props) {
     );
   }
 
-  if (!supabase) notFound();
+  if (!supabaseAdmin) {
+    return (
+      <main id="main-content" className="mx-auto max-w-board px-[18px] py-12 font-courier text-sm text-faded">
+        <p>Server configuration error. Set SUPABASE_SERVICE_ROLE_KEY in the deployment environment.</p>
+        <Link href={`/${place}/${community}`} className="mt-4 inline-block text-link hover:underline">← Back to board</Link>
+      </main>
+    );
+  }
+
   const [{ data: placeRow }, { data: communityRow }] = await Promise.all([
-    supabase.from("places").select("*").eq("slug", place).single(),
-    supabase
+    supabaseAdmin.from("places").select("*").eq("slug", place).single(),
+    supabaseAdmin
       .from("communities")
       .select("*")
       .eq("place_slug", place)
