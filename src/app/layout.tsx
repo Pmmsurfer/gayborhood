@@ -25,7 +25,7 @@ const courier = Courier_Prime({
 });
 
 export const metadata: Metadata = {
-  title: "Gayborhood — Find your people",
+  title: "Neighbor — Find your people",
   description: "A community notice board for gay and queer men, city by city.",
 };
 
@@ -57,7 +57,7 @@ export default async function RootLayout({
         <header className="border-b border-rule bg-paper px-[18px] py-2">
           <div className="mx-auto flex max-w-board items-center justify-between">
             <Link href="/" className="font-bebas text-xl tracking-[2px] text-ink no-underline">
-              Gayborhood
+              Neighbor
             </Link>
             <AuthLinks signedIn={!!user} />
           </div>
